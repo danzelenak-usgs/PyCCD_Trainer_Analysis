@@ -11,15 +11,16 @@ from json_utils import JSONReader
 class CheckTrainingData:
 
     def __init__(self, h=5, v=2, in_trends=r"Z:\ancillary\training\trends.tif",
-                 out_trends=r"C:\Users\dzelenak\Workspace\LCMAP_Eval\ARD_h05v02\class\ancillary\trends_chips",
+                 out_dir=r"C:\Users\dzelenak\Workspace\LCMAP_Eval\ARD_h05v02\class\ancillary",
                  json_dir=r'Z:\sites\washington\pyccd-results\H05V02\2017.06.20\json'):
 
         self.in_trends = in_trends
-        self.out_trends = out_trends
+        self.out_dir = out_dir
+        self.out_trends = self.out_dir + os.sep + "trends_chips"
 
-        if not os.path.exists(os.path.split(self.out_trends)[0]):
+        if not os.path.exists(self.out_trends):
 
-            os.makedirs(os.path.split(self.out_trends)[0])
+            os.makedirs(self.out_trends)
 
         self.H = h
         self.V = v
@@ -30,8 +31,6 @@ class CheckTrainingData:
         self.chip_extents = self.chip_info.CHIP_EXTENTS
 
         self.json_tools = JSONReader(self.JSON_DIR)
-
-        # TILE_EXTENT, PIXEL_AFFINE = h5v2.geospatial_hv(H, V)
 
     def analyze_chips(self):
 
@@ -61,7 +60,10 @@ class CheckTrainingData:
                 # for the current chip generate the pixel UL coordinates if trends data is present
                 # self.pixel_coords = self.chip_info.get_pixel_coords(self.chip_extents[chip])
 
-                out_mask = np.zeros_like(trends.data, dtype=bool).flatten()
+                # trends.data is the original trends clipped to the chip extent
+                out_mask = np.zeros_like(trends.data, dtype=np.uint8).flatten()
+
+                out_mask[ trends.data.flatten() > 0 ] = 1
 
                 json_results = json_reader.get_jsonchip(h=self.H, v=self.V,
                                                     chip_coord=self.chip_extents[chip]).flatten()[trends_mask.flatten()]
@@ -80,17 +82,17 @@ class CheckTrainingData:
 
                 if np.any(out_mask):
 
-                    self.array_to_raster(chip=chip, mask=out_mask)
+                    self.array_to_raster(chip=chip, mask=out_mask, rsc=trends_chip)
 
         return None
 
-    def array_to_raster(self, chip, mask):
+    def array_to_raster(self, chip, mask, rsc):
 
         driver = gdal.GetDriverByName("GTiff")
 
-        src0 = gdal.Open(self.out_trends, gdal.GA_ReadOnly)
+        src0 = gdal.Open(rsc, gdal.GA_ReadOnly)
 
-        out_str = os.path.splitext(self.out_trends)[0] + "{a}chips{a}{b}.tif".format(a=os.sep, b=chip)
+        out_str = self.out_dir + "{a}chips{a}mask_{b}.tif".format(a=os.sep, b=chip)
 
         if not os.path.exists(os.path.split(out_str)[0]):
 
