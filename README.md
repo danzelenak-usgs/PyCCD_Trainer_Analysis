@@ -1,10 +1,10 @@
 # PyCCD_Trainer_Analysis
 
 
-Purpose:
+# Purpose:
 To determine the overlap between Trends Land Cover and valid time segments.  A time segment is currently considered valid if it begins before 12/31/1999 and ends after 1/1/2001 (using the start_day and break_day values).
 
-Parameters required by CheckTrainingData:
+# Parameters required by CheckTrainingData:
 
 h = Horizontal ARD Grid Identifier
 v = Vertical ARD Grid Identifier
@@ -16,16 +16,16 @@ The method "analyze_chips" can then be called without any passed arguments to au
 
 Currently hardcoded to run on tile H05V02, but other tiles can be specified in the call to "CheckTrianingData"
 
-For example:
+# Example:
 
 from analyze_pyccd_training_data import CheckTrainingData
 
-# fine for producing results in tile h5v2
-# call CheckTrainingData using hardcoded values
+#fine for producing results in tile h5v2
+#call CheckTrainingData using hardcoded values
 h5v2 = CheckTrainingData()
-# produce results
+#produce results
 h5v2.analyze_chips()
 
-# produce results for tile H04V01
+#produce results for tile H04V01
 h4v1 = CheckTrainingData(h=4, v=1, in_trends=r"Z:\trendspath", out_dir=r"Z:\outpath", json_dir=r"Z:\jsonpath:)
 h4v1.analyze_chips()
