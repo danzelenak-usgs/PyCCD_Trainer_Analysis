@@ -6,7 +6,7 @@ Python >= 3.6
 gdal == 2.2.1
 
 # Purpose:
-To determine the overlap between Trends Land Cover and valid time segments.  A time segment is currently considered valid if it begins before 12/31/1999 and ends after 1/1/2001 (using the start_day and break_day values).
+To determine the overlap between Trends Land Cover and valid time segments.  A time segment is currently considered valid if it begins before 12/31/1999 and ends after 1/1/2001 (using the start_day and end_day values).
 
 # Parameters required by CheckTrainingData:
 
