@@ -24,6 +24,6 @@ h5v2 = CheckTrainingData()
 
 h5v2.analyze_chips()
 
-h4v1 = CheckTrainingData(h=4, v=1, in_trends=r"Z:\trendspath", out_dir=r"Z:\outpath", json_dir=r"Z:\jsonpath:)
+h4v1 = CheckTrainingData(h=4, v=1, in_trends=r"Z:\trendspath", out_dir=r"Z:\outpath", json_dir=r"Z:\jsonpath")
 
 h4v1.analyze_chips()
