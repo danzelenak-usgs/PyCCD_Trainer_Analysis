@@ -36,3 +36,14 @@ h4v1 = CheckTrainingData(h=4, v=1, in_trends=r"Z:\trendspath", out_dir=r"Z:\outp
 
 h4v1.analyze_chips()
 
+# Outputs:
+
+Data mask for each chip that overlaps with Trends Land Cover (year 2000).  
+
+Coded values are:
+
+0: NoData (i.e. No Trends Coverage)
+
+1: Trends coverage, no valid time segment
+
+2: Trends coverage and valid time segment
