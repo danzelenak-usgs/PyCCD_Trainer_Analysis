@@ -20,12 +20,11 @@ Currently hardcoded to run on tile H05V02, but other tiles can be specified in t
 
 from analyze_pyccd_training_data import CheckTrainingData
 
-#fine for producing results in tile h5v2
-#call CheckTrainingData using hardcoded values
+"call CheckTrainingData using hardcoded values"
 h5v2 = CheckTrainingData()
 #produce results
 h5v2.analyze_chips()
 
-#produce results for tile H04V01
+"produce results for tile H04V01"
 h4v1 = CheckTrainingData(h=4, v=1, in_trends=r"Z:\trendspath", out_dir=r"Z:\outpath", json_dir=r"Z:\jsonpath:)
 h4v1.analyze_chips()
