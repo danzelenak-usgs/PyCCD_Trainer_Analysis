@@ -1,5 +1,8 @@
 # PyCCD_Trainer_Analysis
 
+# Requirements:
+Python >= 3.6
+gdal == 2.2.1
 
 # Purpose:
 To determine the overlap between Trends Land Cover and valid time segments.  A time segment is currently considered valid if it begins before 12/31/1999 and ends after 1/1/2001 (using the start_day and break_day values).
@@ -27,3 +30,4 @@ h5v2.analyze_chips()
 h4v1 = CheckTrainingData(h=4, v=1, in_trends=r"Z:\trendspath", out_dir=r"Z:\outpath", json_dir=r"Z:\jsonpath")
 
 h4v1.analyze_chips()
+
