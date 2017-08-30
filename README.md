@@ -22,7 +22,7 @@ json_dir = Path to the location of json files containing PyCCD results for the c
 
 The method "analyze_chips" can then be called without any passed arguments to automatically generate results
 
-Currently hardcoded to run on tile H05V02, but other tiles can be specified in the call to "CheckTrianingData"
+Currently hardcoded to run on tile H05V02, but other tiles can be specified in the call to "CheckTrainingData"
 
 # Example:
 
