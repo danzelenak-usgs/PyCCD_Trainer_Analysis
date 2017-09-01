@@ -72,7 +72,7 @@ class CheckTrainingData:
 
                 for index, result in enumerate(json_results):
 
-                    if len(result) > 0:
+                    if len(result['change_models']) > 0:
 
                         # TODO implement logging
 
