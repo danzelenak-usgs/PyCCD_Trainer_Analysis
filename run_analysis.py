@@ -15,7 +15,7 @@ parser.add_argument('-o', '--outdir', type=str, required=True,
                          '(currently chip-subset Trends and Trends+Time Segment Chip Masks')
 
 parser.add_argument('-j', '--jsondir', type=str, required=True,
-                    help='Path to the location of json files contianing the PyCCD results for the current tile')
+                    help='Path to the location of json files containing the PyCCD results for the current tile')
 
 args = parser.parse_args()
 

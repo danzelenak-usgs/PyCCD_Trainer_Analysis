@@ -68,17 +68,22 @@ class CheckTrainingData:
                 json_results = json_reader.get_jsonchip(h=self.H, v=self.V,
                                                     chip_coord=self.chip_extents[chip]).flatten()[trends_mask.flatten()]
 
-                if json_results is None:
-
-                    # TODO get some kind of logging here to figure out why json_results is None
-
-                    continue
-
                 sliced = out_mask[trends_mask.flatten()]
 
                 for index, result in enumerate(json_results):
 
-                    sliced[index] = json_reader.check_time_segment(results=result)
+                    if len(result) > 0:
+
+                        # TODO implement logging
+
+                        # continue
+
+                        sliced[index] = json_reader.check_time_segment(results=result)
+
+                    else:
+
+                        # Case for when PyCCD coverage = 0, still count as good Trends Data
+                        sliced[index] = 1
 
                 out_mask[trends_mask.flatten()] = sliced
 
