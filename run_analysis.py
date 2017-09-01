@@ -4,7 +4,7 @@ from analyze_pyccd_training_data import CheckTrainingData
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('-hv', nargs=2, type=str, required=True, metavar=('HH', 'VV'),
+parser.add_argument('-hv', nargs=2, type=int, required=True, metavar=('HH', 'VV'),
                     help='Horizontal and vertical ARD grid identifiers')
 
 parser.add_argument('-t', '--trends', type=str, required=True,
