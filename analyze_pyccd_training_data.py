@@ -115,6 +115,8 @@ class CheckTrainingData:
 
     def assemble_chips(self, chips):
 
+        # TODO composite chip arrays into a tile array, write tile array to raster
+
         pass
 
         infiles = glob.glob(chips + os.sep + "*.tif")
@@ -128,3 +130,16 @@ class CheckTrainingData:
         for index, item in enumerate(infiles):
 
             pass
+
+    def graph_results(self):
+
+        # TODO produce graphs showing number of Trends Classes w/o valid time segments
+
+        pass
+
+
+    def get_tile_timesegments(self):
+
+        # TODO write method to go produce tile data mask everywhere that a valid time segment exists
+
+        pass
