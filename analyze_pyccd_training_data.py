@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 from osgeo import gdal
 import glob
@@ -34,9 +35,13 @@ class CheckTrainingData:
 
     def analyze_chips(self):
 
+        counter = 1.0
+
         for chip in self.chip_extents:
 
-            print("Analyzing Chip {} of 2500\n".format(chip))
+            current = counter / 2500.0 * 100.0
+
+            print("\nAnalyzing Chip {} of 2500\n".format(chip))
 
             # subset the CONUS trends to the current chip extent
 
@@ -56,7 +61,7 @@ class CheckTrainingData:
 
             if np.any(trends_mask):
 
-                print("\tFound Trends data for chip {}\n".format(chip))
+                print("\n\tFound Trends data for chip {}\n".format(chip))
                 # for the current chip generate the pixel UL coordinates if trends data is present
                 # self.pixel_coords = self.chip_info.get_pixel_coords(self.chip_extents[chip])
 
@@ -89,11 +94,19 @@ class CheckTrainingData:
 
                 out_mask = out_mask.reshape((100,100))
 
-                print("\nGenerating new raster from time_segment & trends mask")
+                print("\nGenerating new raster from time_segment & trends mask\n")
 
                 if np.any(out_mask):
 
                     self.array_to_raster(chip=chip, mask=out_mask, rsc=trends_chip)
+
+            # show the percent complete
+            sys.stdout.write("\r%s%% Done " % str(current)[:5])
+
+            # needed to display the current percent complete
+            sys.stdout.flush()
+
+            counter += 1.0
 
         return None
 
