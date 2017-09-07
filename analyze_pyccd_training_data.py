@@ -99,7 +99,7 @@ class CheckTrainingData:
 
                     # needed to display the current percent complete
                     sys.stdout.flush()
-                
+
                 out_mask[trends_mask.flatten()] = sliced
 
                 out_mask = out_mask.reshape((100,100))

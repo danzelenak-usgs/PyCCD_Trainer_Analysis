@@ -25,7 +25,7 @@ class SubsetTrends:
                                                                                      src=self.trends_in,
                                                                                      dst=self.trends_chip)
 
-        subprocess.call(self.trans, shell=True)
+        subprocess.call(self.trans, shell=False)
 
         self.data = self.read_data(self.trends_chip)
 
