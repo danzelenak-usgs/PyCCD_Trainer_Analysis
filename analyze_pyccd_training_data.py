@@ -94,12 +94,6 @@ class CheckTrainingData:
                         # Case for when PyCCD coverage = 0, still count as good Trends Data
                         sliced[index] = 1
 
-                    # show the percent complete
-                    sys.stdout.write("\r%s%% Done " % str(current_)[:5])
-
-                    # needed to display the current percent complete
-                    sys.stdout.flush()
-
                 out_mask[trends_mask.flatten()] = sliced
 
                 out_mask = out_mask.reshape((100,100))
