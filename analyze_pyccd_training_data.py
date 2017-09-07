@@ -61,6 +61,8 @@ class CheckTrainingData:
 
             if np.any(trends_mask):
 
+                counter_ = 1.0
+
                 print("\n\tFound Trends data for chip {}\n".format(chip))
                 # for the current chip generate the pixel UL coordinates if trends data is present
                 # self.pixel_coords = self.chip_info.get_pixel_coords(self.chip_extents[chip])
@@ -77,6 +79,8 @@ class CheckTrainingData:
 
                 for index, result in enumerate(json_results):
 
+                    current_ = counter_ / float(len(json_results)) * 100.0
+
                     if len(result['change_models']) > 0:
 
                         # TODO implement logging
@@ -90,6 +94,12 @@ class CheckTrainingData:
                         # Case for when PyCCD coverage = 0, still count as good Trends Data
                         sliced[index] = 1
 
+                    # show the percent complete
+                    sys.stdout.write("\r%s%% Done " % str(current_)[:5])
+
+                    # needed to display the current percent complete
+                    sys.stdout.flush()
+                
                 out_mask[trends_mask.flatten()] = sliced
 
                 out_mask = out_mask.reshape((100,100))
@@ -107,6 +117,8 @@ class CheckTrainingData:
             sys.stdout.flush()
 
             counter += 1.0
+
+        sys.stdout.flush()
 
         return None
 
