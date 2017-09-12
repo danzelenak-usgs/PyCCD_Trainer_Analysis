@@ -57,6 +57,7 @@ class JSONReader:
         result = self.find_chipcurve(file, pixel_coord)
 
         if result.get('result_ok') is True:
+
             return json.loads(result['result'])
 
     def get_json(self, path):

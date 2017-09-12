@@ -29,6 +29,7 @@ class CheckTrainingData:
         self.JSON_DIR = json_dir
 
         self.chip_info = ChipExtents(self.H, self.V)
+
         self.chip_extents = self.chip_info.CHIP_EXTENTS
 
         self.json_tools = JSONReader(self.JSON_DIR)
@@ -61,8 +62,6 @@ class CheckTrainingData:
 
             if np.any(trends_mask):
 
-                counter_ = 1.0
-
                 print("\n\tFound Trends data for chip {}\n".format(chip))
                 # for the current chip generate the pixel UL coordinates if trends data is present
                 # self.pixel_coords = self.chip_info.get_pixel_coords(self.chip_extents[chip])
@@ -79,13 +78,9 @@ class CheckTrainingData:
 
                 for index, result in enumerate(json_results):
 
-                    current_ = counter_ / float(len(json_results)) * 100.0
-
                     if len(result['change_models']) > 0:
 
                         # TODO implement logging
-
-                        # continue
 
                         sliced[index] = json_reader.check_time_segment(results=result)
 
@@ -144,6 +139,11 @@ class CheckTrainingData:
         return None
 
     def assemble_chips(self, chips):
+        """
+
+        :param chips: Path to the location of the chip masks
+        :return:
+        """
 
         # TODO composite chip arrays into a tile array, write tile array to raster
 

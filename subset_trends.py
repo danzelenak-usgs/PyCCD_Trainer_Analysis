@@ -18,14 +18,14 @@ class SubsetTrends:
         self.ymin = extent.y_min
         self.ymax = extent.y_max
 
-        self.src = gdal.Open(self.trends_in, gdal.GA_ReadOnly)
+        # self.src = gdal.Open(self.trends_in, gdal.GA_ReadOnly)
 
         self.trans = "gdal_translate -projwin {ulx} {uly} {lrx} {lry} {src} {dst}".format(ulx=self.xmin, uly=self.ymax,
                                                                                      lrx=self.xmax, lry=self.ymin,
                                                                                      src=self.trends_in,
                                                                                      dst=self.trends_chip)
 
-        subprocess.call(self.trans, shell=False)
+        subprocess.call(self.trans, shell=True)
 
         self.data = self.read_data(self.trends_chip)
 
