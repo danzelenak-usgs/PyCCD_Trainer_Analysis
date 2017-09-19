@@ -8,6 +8,7 @@ from geo_utils import ChipExtents
 from subset_trends import SubsetTrends
 from json_utils import JSONReader
 
+WKT = "ard_srs.wkt"
 
 class CheckTrainingData:
 
@@ -131,8 +132,8 @@ class CheckTrainingData:
         outband.FlushCache()
         outband.SetNoDataValue(255)
 
-        outfile.SetGeoTransform( src0.GetGeoTransform())
-        outfile.SetProjection( src0.GetProjection())
+        # outfile.SetGeoTransform( src0.GetGeoTransform())
+        outfile.SetProjection(WKT)
 
         src0, outfile = None, None
 
