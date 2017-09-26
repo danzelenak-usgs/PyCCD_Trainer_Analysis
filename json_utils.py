@@ -145,11 +145,12 @@ class JSONReader:
 
                 print("Found a valid time segment")
 
-                return 1
+                return 2
 
+            # if the last result is reached and still no valid time segment is found, return the value 1
             elif result == results['change_models'][-1]:
 
-                return 0
+                return 1
 
             else:
 

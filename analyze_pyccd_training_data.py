@@ -202,7 +202,7 @@ class CheckTimeSegments:
 
             current = counter / 2500.0 * 100.0
 
-            mask = np.zeros(shape=(100,100), dtype=np.bool).flatten()
+            mask = np.zeros(shape=(100,100), dtype=np.uint8).flatten()
 
             json_results = json_reader.get_jsonchip(h=self.H, v=self.V, chip_coord=self.chip_extents[chip]).flatten()
 
@@ -214,6 +214,7 @@ class CheckTimeSegments:
 
                 else:
 
+                    # case for NoData within a tile
                     mask[index] = 0
 
             out_mask = mask.reshape((100,100))

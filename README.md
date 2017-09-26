@@ -40,10 +40,18 @@ h4v1.analyze_chips()
 
 Data mask for each chip that overlaps with Trends Land Cover (year 2000).  
 
-Coded values are:
+Trends Masks Coded Values:
 
 0: NoData (i.e. No Trends Coverage)
 
 1: Trends coverage, no valid time segment
 
 2: Trends coverage and valid time segment
+
+Time Segment Masks Coded Values:
+
+0: NoData (i.e. No PyCCD results)
+
+1: No valid time segment found
+
+2: Valid time segment found
