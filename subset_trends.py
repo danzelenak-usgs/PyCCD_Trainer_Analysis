@@ -1,4 +1,4 @@
-import os
+
 from osgeo import gdal
 import subprocess
 import numpy as np

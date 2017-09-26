@@ -8,7 +8,11 @@ from geo_utils import ChipExtents
 from subset_trends import SubsetTrends
 from json_utils import JSONReader
 
-WKT = "ard_srs.wkt"
+WKT = '''PROJCS["Albers",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378140,298.2569999999957,AUTHORITY["EPSG",
+"7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433],AUTHORITY["EPSG","4326"]],
+PROJECTION["Albers_Conic_Equal_Area"],PARAMETER["standard_parallel_1",29.5],PARAMETER["standard_parallel_2",45.5],
+PARAMETER["latitude_of_center",23],PARAMETER["longitude_of_center",-96],PARAMETER["false_easting",0],
+PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]'''
 
 class CheckTrainingData:
 
@@ -33,15 +37,17 @@ class CheckTrainingData:
 
         self.chip_extents = self.chip_info.CHIP_EXTENTS
 
-        self.json_tools = JSONReader(self.JSON_DIR)
+        # self.json_tools = JSONReader(self.JSON_DIR)
 
     def analyze_chips(self):
 
         counter = 1.0
 
+        json_reader = JSONReader(self.JSON_DIR)
+
         for chip in self.chip_extents:
 
-            current = counter / 2500.0 * 100.0
+            current = counter / len(self.chip_extents) * 100.0
 
             print("\nAnalyzing Chip {} of 2500\n".format(chip))
 
@@ -54,8 +60,6 @@ class CheckTrainingData:
                 os.remove(trends_chip)
 
             trends = SubsetTrends(self.in_trends, trends_chip, self.chip_extents[chip])
-
-            json_reader = JSONReader(self.JSON_DIR)
 
             # generate the trends mask for the the current chip
             # anywhere that trends > 0 is True
@@ -83,7 +87,7 @@ class CheckTrainingData:
 
                         # TODO implement logging
 
-                        sliced[index] = json_reader.check_time_segment(results=result)
+                        sliced[index] = json_reader.check_time_segment_with_training(results=result)
 
                     else:
 
@@ -130,9 +134,10 @@ class CheckTrainingData:
         outband.WriteArray(mask, 0, 0)
 
         outband.FlushCache()
-        outband.SetNoDataValue(255)
 
-        # outfile.SetGeoTransform( src0.GetGeoTransform())
+        geo = (self.chip_extents[chip].x_min, 30.0, 0.0, self.chip_extents[chip].y_max, 0.0, -30.0)
+
+        outfile.SetGeoTransform(geo)
         outfile.SetProjection(WKT)
 
         src0, outfile = None, None
@@ -164,13 +169,93 @@ class CheckTrainingData:
 
     def graph_results(self):
 
-        # TODO produce graphs showing number of Trends Classes w/o valid time segments
+        # TODO produce graphs showing quantities w/o valid time segments for each Trends class
 
         pass
 
 
-    def get_tile_timesegments(self):
+class CheckTimeSegments:
 
-        # TODO write method to go produce tile data mask everywhere that a valid time segment exists
+    def __init__(self, h, v, json_dir, out_dir):
 
-        pass
+        self.H = h
+        self.V = v
+
+        self.json_dir = json_dir
+
+        self.out_dir = out_dir
+        self.out_dir = self.out_dir + os.sep + "time_seg_masks"
+
+        self.chip_info = ChipExtents(self.H, self.V)
+
+        self.chip_extents = self.chip_info.CHIP_EXTENTS
+
+        # self.json_tools = JSONReader(self.json_dir)
+
+    def analyze_time_segments(self):
+
+        json_reader = JSONReader(self.json_dir)
+
+        counter = 1.0
+
+        for chip in self.chip_extents:
+
+            current = counter / 2500.0 * 100.0
+
+            mask = np.zeros(shape=(100,100), dtype=np.bool).flatten()
+
+            json_results = json_reader.get_jsonchip(h=self.H, v=self.V, chip_coord=self.chip_extents[chip]).flatten()
+
+            for index, result in enumerate(json_results):
+
+                if len(result["change_models"]) > 0:
+
+                    mask[index] = json_reader.check_time_segment(results=result)
+
+                else:
+
+                    mask[index] = 0
+
+            out_mask = mask.reshape((100,100))
+
+            if np.any(out_mask):
+
+                self.array_to_raster(chip=chip, mask=out_mask)
+
+            sys.stdout.write("\r%s%% Done " % str(current)[:5])
+
+            # needed to display the current percent complete
+            sys.stdout.flush()
+
+            counter += 1.0
+
+        sys.stdout.flush()
+
+        return None
+
+    def array_to_raster(self, chip, mask):
+
+        driver = gdal.GetDriverByName("GTiff")
+
+        out_str = self.out_dir + "{a}chips{a}mask_{b}.tif".format(a=os.sep, b=chip)
+
+        if not os.path.exists(os.path.split(out_str)[0]):
+
+            os.makedirs(os.path.split(out_str)[0])
+
+        outfile = driver.Create(out_str, 100, 100, 1, gdal.GDT_Byte)
+
+        outband = outfile.GetRasterBand(1)
+
+        outband.WriteArray(mask, 0, 0)
+
+        outband.FlushCache()
+
+        geo = (self.chip_extents[chip].x_min, 30.0, 0.0, self.chip_extents[chip].y_max, 0.0, -30.0)
+
+        outfile.SetGeoTransform(geo)
+        outfile.SetProjection(WKT)
+
+        src0, outfile = None, None
+
+        return None

@@ -103,7 +103,7 @@ class JSONReader:
 
         return outdata
 
-    def check_time_segment(self, results):
+    def check_time_segment_with_training(self, results):
 
         # start_dates = []
         # end_dates = []
@@ -124,6 +124,32 @@ class JSONReader:
             elif result == results['change_models'][-1]:
 
                 return 1
+
+            else:
+
+                continue
+
+    def check_time_segment(self, results):
+
+        # start_dates = []
+        # end_dates = []
+
+        enforce_start = dt.datetime.toordinal(dt.datetime(1999, 12, 31))
+        enforce_end = dt.datetime.toordinal(dt.datetime(2001, 1, 1))
+
+        for num, result in enumerate(results['change_models']):
+
+            print("\n\tChecking result {} of {}".format(num+1, len(results['change_models'])))
+
+            if result['start_day'] <= enforce_start and result['end_day'] >= enforce_end:
+
+                print("Found a valid time segment")
+
+                return 1
+
+            elif result == results['change_models'][-1]:
+
+                return 0
 
             else:
 
